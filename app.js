@@ -1,70 +1,24 @@
-// let url = "https://catfact.ninja/fact";
-
-// fetch(url)
-//   .then((res) => {
-// console.log(res);
-//   return res.json();
-// })
-// .then((data) => {
-//   console.log("CatFact_1: ", data.fact);
-//   return fetch(url);
-// })
-// .then((res) => {
-//   return res.json();
-// })
-// .then((data2) => {
-//   console.log("CatFact_2: ", data2.fact);
-// })
-// .catch((err) => {
-//   console.log("ERROR -", err);
-// });
-
-// now doing the job using async and await.
-
-// async function getFacts() {
-//   try{
-
-//     let res = await fetch(url);
-//     let data = await res.json();
-//     console.log(data.fact);
-//   }
-//   catch(e){
-//     console.log("Error - ", e);
-//   }
-// }
-// getFacts();
-
-// =====================================================================
-
-// Using Axios
-// let btn = document.querySelector("button");
-// btn.addEventListener("click", async ()=>{
-//   let fact = await getFacts();
-//   // console.log(fact);
-//   let p = document.querySelector("#result");
-//   p.innerText = fact; 
-// })
-// async function getFacts() {
-//   try {
-//     let res = await axios.get(url);
-//     // let data = await res.json();
-//     return res.data.fact;
-//   } catch (e) {
-//     console.log("error- ", e);
-//     return "No fact found";
-//   }
-// }
-
-// =====================================================================
-// Using Axios and async await
-
 let url = "https://catfact.ninja/fact";
 
-let btn = document.querySelector("button");
+let btn = document.querySelector("#factBtn");
+let copyBtn = document.querySelector("#copyBtn");
+let result = document.querySelector("#result");
+let factCard = document.querySelector("#factCard");
+
 btn.addEventListener("click", async () => {
+    // Disable the button during loading
+    btn.disabled = true;
+    btn.innerText = "Loading...";
+
     let fact = await getFacts();
-    let p = document.querySelector("#result");
-    p.innerText = fact;
+
+    // Display the fact inside the card
+    result.innerText = fact;
+    copyBtn.style.display = 'inline-block'; // Show the copy button
+
+    // Enable the button after fetching
+    btn.disabled = false;
+    btn.innerText = "Show New Fact";
 });
 
 async function getFacts() {
@@ -76,3 +30,14 @@ async function getFacts() {
         return "No fact found";
     }
 }
+
+// Copy the fact to clipboard
+copyBtn.addEventListener("click", () => {
+    navigator.clipboard.writeText(result.innerText)
+        .then(() => {
+            alert("Fact copied to clipboard!");
+        })
+        .catch(err => {
+            console.error("Error copying text: ", err);
+        });
+});
